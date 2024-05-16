@@ -88,22 +88,19 @@
             background-image: url(jukebox-top.png);
         }
 
-        /* .disc_wrapper_wrapper
-        {
-            position: absolute;
-            transform-style: preserve-3d;
-            transform: rotateX(-20deg) rotateY(320deg);
-        }
-
         .disc_wrapper
         {
-            position: absolute;
-            background-color: antiquewhite;
-            transform: rotateX(90deg) translateY(100px) translateZ(100px);
             width: 88px;
             height: 200px;
-            z-index: 3;
-        } */
+            top: -83px;
+            left: 100px;
+            position: absolute;
+            transform: translateZ(3000px) rotateX(70deg) rotateY(0deg) rotateZ(40deg);
+            transform-style: preserve-3d;
+            background-image: url(jukebox-top.png);
+            background-position: -110px 3px;
+            background-size: cover;
+        }
 
         .disc
         {
@@ -179,9 +176,7 @@
             <div class="disc_face back"></div>
         </div>
 
-        <!-- <div class="disc_wrapper_wrapper">
-            <div class="disc_wrapper"></div>
-        </div> -->
+        <div class="disc_wrapper"></div>
     </div>
 
     <script>
