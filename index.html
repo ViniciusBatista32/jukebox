@@ -90,16 +90,29 @@
 
         .disc_wrapper
         {
-            width: 88px;
-            height: 200px;
-            top: -83px;
-            left: 100px;
             position: absolute;
-            transform: translateZ(3000px) rotateX(70deg) rotateY(0deg) rotateZ(40deg);
             transform-style: preserve-3d;
             background-image: url(jukebox-top.png);
-            background-position: -110px 3px;
+        }
+
+        .disc_wrapper_1
+        {
+            width: 88px;
+            height: 200px;
+            top: -82px;
+            left: 99px;
+            background-position: -110px 1px;
             background-size: cover;
+            transform: translateZ(2710px) translateX(14px) translateY(-90px) rotateX(70deg) rotateY(0deg) rotateZ(40deg)
+        }
+
+        .disc_wrapper_2
+        {
+            width: 200px;
+            height: 50px;
+            background-position: 0px 50px;
+            background-size: 200px 200px;
+            transform: translateZ(2731px) translateX(-36px) translateY(32px) rotateX(70deg) rotateY(0deg) rotateZ(40deg);
         }
 
         .disc
@@ -176,7 +189,8 @@
             <div class="disc_face back"></div>
         </div>
 
-        <div class="disc_wrapper"></div>
+        <div class="disc_wrapper disc_wrapper_1"></div>
+        <div class="disc_wrapper disc_wrapper_2"></div>
     </div>
 
     <script>
