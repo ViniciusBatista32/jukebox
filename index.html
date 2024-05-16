@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        body
+        {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .wrapper
+        {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: transform 1s, scale 1s;
+            transform-style: preserve-3d;
+        }
+
+        .jukebox
+        {
+            width: 200px;
+            height: 200px;
+            transform-style: preserve-3d;
+            transform: rotateX(-20deg) rotateY(320deg);
+
+            cursor: pointer;
+        }
+
+        .jukebox .face
+        {
+            width: 200px;
+            height: 200px;
+            position: absolute;
+
+            background-position: center;
+            background-size: contain;
+        }
+
+        .wrapper:has(.jukebox:hover), .wrapper.active
+        {
+            scale: 1.2;
+        }
+
+        .face-front
+        {
+            transform: translateZ(100px);
+        }
+
+        .face-right
+        {
+            transform: rotateY(90deg) translateZ(100px);
+        }
+
+        .face-back
+        {
+            transform: rotateY(180deg) translateZ(100px);
+        }
+
+        .face-left
+        {
+            transform: rotateY(-90deg) translateZ(100px);
+        }
+
+        .face-top
+        {
+            transform: rotateX(90deg) translateZ(100px);
+        }
+
+        .face-bottom
+        {
+            transform: rotateX(-90deg) translateZ(100px);
+        }
+
+        .jukebox .face.side
+        {
+            background-image: url(jukebox-side.png);
+        }
+        
+        .jukebox .face.top
+        {
+            background-image: url(jukebox-top.png);
+        }
+
+        /* .disc_wrapper_wrapper
+        {
+            position: absolute;
+            transform-style: preserve-3d;
+            transform: rotateX(-20deg) rotateY(320deg);
+        }
+
+        .disc_wrapper
+        {
+            position: absolute;
+            background-color: antiquewhite;
+            transform: rotateX(90deg) translateY(100px) translateZ(100px);
+            width: 88px;
+            height: 200px;
+            z-index: 3;
+        } */
+
+        .disc
+        {
+            width: 2000px;
+            height: 3000px;
+            position: absolute;
+            margin-top: -180px;
+            margin-left: -230px;
+            transform-style: preserve-3d;
+            transform: rotateX(-20deg) rotateY(230deg) translateZ(-3000px);
+            scale: 0.04;
+            z-index: 2;
+        }
+
+        .disc_blocks
+        {
+            transform-style: preserve-3d;
+        }
+
+        .disc .block
+        {
+            width: 200px;
+            height: 200px;
+            transform-style: preserve-3d;
+            position: absolute;
+        }
+
+        .disc .block .face {
+            width: 200px;
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+        }
+
+        .disc > .disc_face
+        {
+            width: 3000px;
+            height: 2000px;
+            position: absolute;
+            background-image: url(disc-face.png);
+            background-position: center;
+            background-size: cover;
+        }
+
+        .disc > .disc_face.front
+        {
+            transform: translateX(-1400px) translateY(-800px) translateZ(100px);
+        }
+
+        .disc > .disc_face.back
+        {
+            transform: rotateY(180deg) translateX(1400px) translateY(-800px) translateZ(100px);
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="jukebox">
+            <div class="face side face-front"></div>
+            <div class="face side face-right"></div>
+            <div class="face side face-back"></div>
+            <div class="face side face-left"></div>
+            <div class="face top face-top">
+            </div>
+            <div class="face side face-bottom"></div>
+        </div>
+    
+        <div class="disc">
+            <div class="disc_face front"></div>
+            <div class="disc_blocks"></div>
+            <div class="disc_face back"></div>
+        </div>
+
+        <!-- <div class="disc_wrapper_wrapper">
+            <div class="disc_wrapper"></div>
+        </div> -->
+    </div>
+
+    <script>
+        function addBlock(color, posX, posY) {
+            const disc = document.querySelector('.disc_blocks');
+            const block = document.createElement('div');
+            block.className = 'block';
+            block.style.transform = `translateY(${posY}px) translateX(${posX}px)`;
+            
+            const faces = ['front', 'right', 'back', 'left', 'top', 'bottom'];
+            faces.forEach(face => {
+                const faceDiv = document.createElement('div');
+                faceDiv.className = `face face-${face}`;
+                faceDiv.style.backgroundColor = color;
+                block.appendChild(faceDiv);
+            });
+
+            disc.appendChild(block);
+        }
+        
+        document.addEventListener('DOMContentLoaded', () =>
+        {
+            const blocks = [
+                ['#111111', -400, 1000], ['#111111', -200, 1000], ['#111111', 0, 1000],
+                ['#111111', 200, 1000], ['#111111', 400, 1000], ['#111111', 600, 800],
+                ['#111111', 800, 800], ['#111111', 1000, 800], ['#111111', 1200, 600],
+                ['#212121', 1400, 400], ['#212121', 1400, 200], ['#212121', 1400, 0],
+                ['#212121', 1400, -200], ['#212121', 1200, -400], ['#212121', 1000, -600],
+                ['#212121', 800, -600], ['#212121', 600, -600], ['#212121', 400, -800],
+                ['#212121', 200, -800], ['#212121', 0, -800], ['#212121', -200, -800],
+                ['#212121', -400, -800], ['#111111', -600, 800], ['#111111', -800, 800],
+                ['#111111', -1000, 800], ['#111111', -1200, 600], ['#212121', -1400, 400],
+                ['#212121', -1400, 200], ['#212121', -1400, 0], ['#212121', -1400, -200],
+                ['#212121', -1200, -400], ['#212121', -1000, -600], ['#212121', -800, -600],
+                ['#212121', -600, -600]
+            ];
+
+            blocks.forEach(([color, posX, posY]) => addBlock(color, posX, posY));
+        });
+
+        document.querySelector('.jukebox').addEventListener('click', function() {
+            document.querySelector('.wrapper').classList.toggle('active');
+        });
+    </script>
+</body>
+</html>
