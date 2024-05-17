@@ -12,6 +12,7 @@
             align-items: center;
             justify-content: center;
             min-height: 100vh;
+            margin: 0px;
         }
 
         .wrapper
@@ -27,9 +28,9 @@
         {
             width: 200px;
             height: 200px;
+            position: absolute;
             transform-style: preserve-3d;
-            transform: rotateX(-20deg) rotateY(320deg);
-
+            transform: rotateX(-20deg) rotateY(135deg);
             cursor: pointer;
         }
 
@@ -43,7 +44,9 @@
             background-size: contain;
         }
 
-        .wrapper:has(.jukebox:hover), .wrapper.active
+        .wrapper:has(.jukebox:hover),
+        .wrapper:has(.disc_wrapper:hover),
+        .wrapper.active
         {
             scale: 1.2;
         }
@@ -92,40 +95,53 @@
         {
             position: absolute;
             transform-style: preserve-3d;
-            background-image: url(jukebox-top.png);
+            cursor: pointer;
         }
 
         .disc_wrapper_1
         {
-            width: 88px;
+            width: 100px;
             height: 200px;
-            top: -82px;
-            left: 99px;
-            background-position: -110px 1px;
+            background-position: -100px 0px;
             background-size: cover;
-            transform: translateZ(2710px) translateX(14px) translateY(-90px) rotateX(70deg) rotateY(0deg) rotateZ(40deg)
+            transform: rotateX(70deg) rotateZ(45deg) translateX(1410px) translateY(1360px) translateZ(800px);
+            background-image: url(jukebox-top.png);
         }
 
         .disc_wrapper_2
         {
             width: 200px;
-            height: 50px;
-            background-position: 0px 50px;
-            background-size: 200px 200px;
-            transform: translateZ(2731px) translateX(-36px) translateY(32px) rotateX(70deg) rotateY(0deg) rotateZ(40deg);
+            height: 200px;
+            background-position: center;
+            background-size: contain;
+            transform: rotateX(-20deg) rotateY(315deg) translateZ(1500px) translateY(-721px) translateX(1401px);
+            background-image: url(jukebox-side.png);
+        }
+
+        .disc_wrapper_3
+        {
+            width: 200px;
+            height: 200px;
+            background-position: center;
+            background-size: contain;
+            transform: rotateX(-20deg) rotateY(45deg) translateZ(500px) translateY(-206px) translateX(-401px);
+            background-image: url(jukebox-side.png);
         }
 
         .disc
         {
-            width: 2000px;
-            height: 3000px;
+            width: 3000px;
+            height: 2000px;
             position: absolute;
-            margin-top: -180px;
-            margin-left: -230px;
+            transform: rotateX(-20deg) rotateY(45deg) translateX(100px) translateY(-15000px);
             transform-style: preserve-3d;
-            transform: rotateX(-20deg) rotateY(230deg) translateZ(-3000px);
+            transition: transform 1.5s;
             scale: 0.04;
-            z-index: 2;
+        }
+
+        .disc.active
+        {
+            transform: rotateX(-20deg) rotateY(45deg) translateX(100px) translateY(0px);
         }
 
         .disc_blocks
@@ -162,12 +178,20 @@
 
         .disc > .disc_face.front
         {
-            transform: translateX(-1400px) translateY(-800px) translateZ(100px);
+            transform: translateZ(100px);
         }
 
         .disc > .disc_face.back
         {
-            transform: rotateY(180deg) translateX(1400px) translateY(-800px) translateZ(100px);
+            transform: rotateY(180deg) translateZ(100px);
+        }
+        
+        .shadow
+        {
+            width: 100px;
+            height: 100px;
+            position: absolute;
+            background-color: rgba(0, 0, 0, 0.5);
         }
     </style>
 </head>
@@ -191,14 +215,19 @@
 
         <div class="disc_wrapper disc_wrapper_1"></div>
         <div class="disc_wrapper disc_wrapper_2"></div>
+        <div class="disc_wrapper disc_wrapper_3"></div>
+
+        <div class="shadow"></div>
     </div>
 
     <script>
+        var audio;
+
         function addBlock(color, posX, posY) {
             const disc = document.querySelector('.disc_blocks');
             const block = document.createElement('div');
             block.className = 'block';
-            block.style.transform = `translateY(${posY}px) translateX(${posX}px)`;
+            block.style.transform = `translateX(${posX}px) translateY(${posY}px)`;
             
             const faces = ['front', 'right', 'back', 'left', 'top', 'bottom'];
             faces.forEach(face => {
@@ -214,26 +243,39 @@
         document.addEventListener('DOMContentLoaded', () =>
         {
             const blocks = [
-                ['#111111', -400, 1000], ['#111111', -200, 1000], ['#111111', 0, 1000],
-                ['#111111', 200, 1000], ['#111111', 400, 1000], ['#111111', 600, 800],
-                ['#111111', 800, 800], ['#111111', 1000, 800], ['#111111', 1200, 600],
-                ['#212121', 1400, 400], ['#212121', 1400, 200], ['#212121', 1400, 0],
-                ['#212121', 1400, -200], ['#212121', 1200, -400], ['#212121', 1000, -600],
-                ['#212121', 800, -600], ['#212121', 600, -600], ['#212121', 400, -800],
-                ['#212121', 200, -800], ['#212121', 0, -800], ['#212121', -200, -800],
-                ['#212121', -400, -800], ['#111111', -600, 800], ['#111111', -800, 800],
-                ['#111111', -1000, 800], ['#111111', -1200, 600], ['#212121', -1400, 400],
-                ['#212121', -1400, 200], ['#212121', -1400, 0], ['#212121', -1400, -200],
-                ['#212121', -1200, -400], ['#212121', -1000, -600], ['#212121', -800, -600],
-                ['#212121', -600, -600]
+                ['#111111', 1000, 1800],    ['#111111', 1200, 1800],    ['#111111', 1400, 1800],
+                ['#111111', 1600, 1800],    ['#111111', 1800, 1800],    ['#111111', 2000, 1600],
+                ['#111111', 2200, 1600],    ['#111111', 2400, 1600],    ['#111111', 2600, 1400],
+                ['#212121', 2800, 1200],    ['#212121', 2800, 1000],    ['#212121', 2800, 800],
+                ['#212121', 2800, 600],     ['#212121', 2600, 400],     ['#212121', 2400, 200],
+                ['#212121', 2200, 200],     ['#212121', 2000, 200],     ['#212121', 1800, 0],
+                ['#212121', 1600, 0],       ['#212121', 1400, 0],       ['#212121', 1200, 0],
+                ['#212121', 1000, 0],       ['#212121', 800, 200],      ['#212121', 600, 200], 
+                ['#212121', 400, 200],      ['#212121', 200, 400],      ['#212121', 0, 600],
+                ['#212121', 0, 800],        ['#212121', 0, 1000],       ['#212121', 0, 1200],
+                ['#111111', 200, 1400],     ['#111111', 400, 1600],     ['#111111', 600, 1600],
+                ['#111111', 800, 1600]
+
             ];
 
             blocks.forEach(([color, posX, posY]) => addBlock(color, posX, posY));
         });
 
-        document.querySelector('.jukebox').addEventListener('click', function() {
+        document.querySelector('.jukebox, .disc_wrapper').addEventListener('click', function() {
             document.querySelector('.wrapper').classList.toggle('active');
-        });
+            document.querySelector('.disc').classList.toggle('active');
+
+            if(document.querySelector('.disc').classList.contains("active"))
+            {
+                setTimeout(() =>
+                {
+                        audio = new Audio('mice-on-venus.mp3');
+                        audio.play();
+                    }, 1500)
+            }
+            else
+                audio.pause();
+            });
     </script>
 </body>
 </html>
